@@ -79,7 +79,7 @@ VALUES
   (98765, 'Delhi', 'Delhi'),
   (23456, 'Bangalore', 'Karnataka');
   
-  SELECT name
+SELECT name
 FROM artists
 WHERE artist_id IN (
     SELECT artist_id
@@ -89,8 +89,6 @@ WHERE artist_id IN (
         FROM skills
         WHERE skill_name = 'director' OR skill_name = 'producer'
     )
-    GROUP BY artist_id
-    HAVING COUNT(DISTINCT skill_id) = 2
 )
 AND artist_id IN (
     SELECT artist_id
@@ -128,6 +126,4 @@ WHERE artist_id IN (
     SELECT artist_id
     FROM movies
     WHERE movie_name IN ('KGF1', 'RRR', 'Pushpa')
-    GROUP BY artist_id
-    HAVING COUNT(DISTINCT movie_name) = 3
 );
