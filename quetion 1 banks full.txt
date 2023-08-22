@@ -113,10 +113,10 @@ FROM customer
 WHERE cust_id IN (
     SELECT cust_id
     FROM accounts
-    WHERE ifsc_code = (
+    WHERE ifsc_code IN (
         SELECT ifsc_code
         FROM branch
-        WHERE branch_name = 'Branch B'
+        WHERE branch_name = 'Gandipet'
     )
     GROUP BY cust_id
     HAVING COUNT(*) > 1
