@@ -125,16 +125,15 @@ WHERE cust_id IN (
 --4
 SELECT cityname
 FROM city
-WHERE location_pincode IN (
+WHERE location_pincode = (
     SELECT location_pincode
-    FROM accounts
-    GROUP BY location_pincode
-    HAVING AVG(balance_inlakhs) = (
-        SELECT MIN(avg_balance)
-        FROM (
-            SELECT AVG(balance_inlakhs) AS avg_balance
-            FROM accounts
-            GROUP BY location_pincode
-        )
-    )
+    FROM customer
+    WHERE location_pincode = (
+        SELECT location_pincode
+        FROM accounts
+        GROUP BY location_pincode
+        ORDER BY AVG(balance_inlakhs) ASC
+        LIMIT 1
+    )
+    LIMIT 1
 );
