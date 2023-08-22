@@ -137,3 +137,81 @@ WHERE location_pincode = (
     )
     LIMIT 1
 );
+
+--4
+
+SELECT cityname
+FROM city
+WHERE location_pincode = (
+    SELECT location_pincode
+    FROM customer
+    WHERE location_pincode = (
+        SELECT location_pincode
+        FROM accounts
+        GROUP BY location_pincode
+        ORDER BY AVG(balance_inlakhs) ASC
+    )
+    FETCH FIRST 1 ROWS ONLY
+);
+
+
+--internal 2
+
+--1
+SELECT e.ename
+FROM emp e
+JOIN dept d ON e.did = d.did
+WHERE e.sal > (
+    SELECT AVG(sal)
+    FROM emp
+    WHERE did = e.did
+  )
+  AND e.city <> 'hyderabad';
+
+
+--2
+
+SELECT d.dname, e.sal AS third_highest_salary
+FROM dept d
+JOIN (
+    SELECT e.*, ROW_NUMBER() OVER (PARTITION BY e.did ORDER BY e.sal DESC) AS row_num
+    FROM emp e
+) e ON d.did = e.did
+WHERE e.row_num = 3;
+
+
+--3
+
+INSERT INTO emp  VALUES  (8, 'Employee 9', 1800, 3,'c');
+ SELECT e1.did,count(*)
+FROM emp e1
+JOIN dept d ON e1.did = d.did
+WHERE e1.sal > (
+    SELECT AVG(sal)
+    FROM emp e2
+    WHERE e2.did = e1.did
+  )
+group by e1.did
+
+
+--4
+
+DELETE FROM your_table
+WHERE (column1, column2, ...) IN (
+    SELECT column1, column2, ...
+    FROM your_table
+    GROUP BY column1, column2, ...
+    HAVING COUNT(*) > 1
+);
+ 
+DELETE FROM your_table
+WHERE (column1, column2, ...) IN (
+    SELECT column1, column2, ...
+    FROM your_table
+    GROUP BY column1, column2, ...
+    HAVING COUNT(*) = 1
+);
+
+
+
+
